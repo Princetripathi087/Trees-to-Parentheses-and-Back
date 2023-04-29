@@ -1,0 +1,48 @@
+class Tree {}
+class Leaf extends Tree {}
+class Branch extends Tree { 
+    Tree left;
+    Tree right;
+    public Branch(Tree left, Tree right) {
+        this.left = left;
+        this.right = right;
+    }
+}
+
+public class BinaryTree {
+    public static String treeToParens(Tree tree) {
+        if (tree instanceof Leaf) {
+            return "()";
+        } else {
+            String leftStr = treeToParens(((Branch) tree).left);
+            String rightStr = treeToParens(((Branch) tree).right);
+            return "(" + leftStr + rightStr + ")";
+        }
+    }
+
+    public static Tree parensToTree(String parens) {
+        if (parens.equals("()")) {
+            return new Leaf();
+        } else {
+            int leftStart = 1;
+            int count = 1;
+            int i = 1;
+            while (count > 0) {
+                if (parens.charAt(i) == '(') {
+                    count += 1;
+                } else if (parens.charAt(i) == ')') {
+                    count -= 1;
+                }
+                i += 1;
+            }
+            int leftEnd = i - 1;
+            int rightStart = i;
+            int rightEnd = parens.length() - 1;
+            String leftStr = parens.substring(leftStart, leftEnd);
+            String rightStr = parens.substring(rightStart, rightEnd);
+            Tree left = parensToTree(leftStr);
+            Tree right = parensToTree(rightStr);
+            return new Branch(left, right);
+        }
+    }
+}
